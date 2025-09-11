@@ -1,0 +1,31 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: python:3.11
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    
+    - name: Run pytest
+      run: pytest tests
+    
+    - name: Run mypy
+      run: mypy src/
+    
+    - name: Run black
+      run: black --diff --check src/
+    
+    - name: Run isort
+      run: isort --check-only --diff src/
+    
+    - name: Run flake8
+      run: flake8 src/
