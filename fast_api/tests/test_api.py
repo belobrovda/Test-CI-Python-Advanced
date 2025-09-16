@@ -7,9 +7,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from module_26_fastapi.homework.main import app
-from module_26_fastapi.homework.database import get_db
-from module_26_fastapi.homework.models import Base, Recipe, Ingredient
+from fast_api.main import app
+from fast_api.database import get_db
+from fast_api.models import Base, Recipe, Ingredient
 
 
 class TestCookbookAPI(unittest.TestCase):

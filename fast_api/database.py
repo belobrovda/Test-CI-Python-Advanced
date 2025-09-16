@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from module_26_fastapi.homework.models import Base, Recipe, Ingredient
+from fast_api.models import Base, Recipe, Ingredient
 
 # Настройка подключения к базе данных (SQLite для примера)
 SQLALCHEMY_DATABASE_URL = "sqlite:///./cookbook.db"

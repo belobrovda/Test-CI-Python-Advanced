@@ -2,14 +2,20 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, asc
 from typing import List
+from contextlib import asynccontextmanager
 
 from starlette.responses import JSONResponse
 
-from module_26_fastapi.homework.database import get_db, create_tables
-from module_26_fastapi.homework.models import Recipe, Ingredient
-from module_26_fastapi.homework.schemas import RecipeCreate, RecipeResponse, RecipeListResponse, IngredientResponse
+from fast_api.database import get_db, create_tables
+from fast_api.models import Recipe, Ingredient
+from fast_api.schemas import RecipeCreate, RecipeResponse, RecipeListResponse, IngredientResponse
 
-# Создание приложения FastAPI
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_tables()
+    yield
+
 app = FastAPI(
     title="CookBook API",
     description="API для кулинарной книги с рецептами",
@@ -18,12 +24,8 @@ app = FastAPI(
         "name": "API Support",
         "email": "support@cookbook.com",
     },
+    lifespan=lifespan
 )
-
-
-@app.on_event("startup")
-def on_startup():
-    create_tables()
 
 
 @app.get("/")
@@ -41,11 +43,11 @@ async def root():
     response_model=List[RecipeListResponse],
     summary="Получить список всех рецептов",
     description="""Возвращает список всех рецептов, отсортированных по популярности.
-    
+
     **Сортировка:**
     - По убыванию количества просмотров (популярности)
     - При равном количестве просмотров - по возрастанию времени приготовления
-    
+
     **Используется для:** Первого экрана приложения - таблицы со списком рецептов.
     """
 )
@@ -68,16 +70,16 @@ async def get_recipes(db: Session = Depends(get_db)):
     response_model=RecipeResponse,
     summary="Получить детальную информацию о рецепте",
     description="""Возвращает полную информацию о конкретном рецепте по его ID.
-    
+
     **Включает:**
     - Название блюда
     - Время приготовления
     - Список ингредиентов
     - Текстовое описание
     - Количество просмотров
-    
+
     **Примечание:** При каждом успешном запросе увеличивает счетчик просмотров на 1.
-    
+
     **Используется для:** Второго экрана приложения - детальной информации о рецепте.
     """
 )
@@ -107,15 +109,15 @@ async def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
     status_code=status.HTTP_201_CREATED,
     summary="Создать новый рецепт",
     description="""Создает новый рецепт в кулинарной книге.
-    
+
     **Требуемые поля:**
     - title: Название блюда (макс. 200 символов)
     - cooking_time: Время приготовления в минутах (должно быть > 0)
     - description: Текстовое описание рецепта
     - ingredient_ids: Список ID существующих ингредиентов
-    
+
     **Примечание:** Ингредиенты должны быть созданы заранее.
-    
+
     **Возвращает:** Созданный рецепт со всей информацией.
     """
 )
@@ -166,6 +168,7 @@ async def http_exception_handler(request, exc):
         status_code=exc.status_code,
         content={"detail": exc.detail},
     )
+
 
 if __name__ == "__main__":
     import uvicorn
