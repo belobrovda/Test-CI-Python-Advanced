@@ -125,7 +125,6 @@ async def create_recipe(recipe_data: RecipeCreate, db: Session = Depends(get_db)
     """
     Создает новый рецепт с указанными ингредиентами.
     """
-    # Проверяем существование всех ингредиентов
     ingredients = []
     for ingredient_id in recipe_data.ingredient_ids:
         ingredient = db.query(Ingredient).filter(Ingredient.id == ingredient_id).first()
@@ -136,7 +135,6 @@ async def create_recipe(recipe_data: RecipeCreate, db: Session = Depends(get_db)
             )
         ingredients.append(ingredient)
 
-    # Создаем новый рецепт
     new_recipe = Recipe(
         title=recipe_data.title,
         cooking_time=recipe_data.cooking_time,
