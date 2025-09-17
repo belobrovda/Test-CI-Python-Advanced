@@ -128,17 +128,14 @@ async def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
     **Возвращает:** Созданный рецепт со всей информацией.
     """,
 )
-async def create_recipe(
-        recipe_data: RecipeCreate,
-        db: Session = Depends(get_db)):
+async def create_recipe(recipe_data: RecipeCreate, db: Session = Depends(get_db)):
     """
     Создает новый рецепт с указанными ингредиентами.
     """
     # Проверяем существование всех ингредиентов
     ingredients = []
     for ingredient_id in recipe_data.ingredient_ids:
-        ingredient = db.query(Ingredient).filter(
-            Ingredient.id == ingredient_id).first()
+        ingredient = db.query(Ingredient).filter(Ingredient.id == ingredient_id).first()
         if not ingredient:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
