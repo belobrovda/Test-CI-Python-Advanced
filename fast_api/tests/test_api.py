@@ -24,7 +24,9 @@ class TestCookbookAPI(unittest.TestCase):
             connect_args={"check_same_thread": False},
             poolclass=StaticPool,
         )
-        cls.TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=cls.engine)
+        cls.TestingSessionLocal = sessionmaker(
+            autocommit=False, autoflush=False, bind=cls.engine
+        )
 
         # Создаем таблицы
         Base.metadata.create_all(bind=cls.engine)
@@ -49,7 +51,7 @@ class TestCookbookAPI(unittest.TestCase):
                 Ingredient(name="Яйца"),
                 Ingredient(name="Сыр Пармезан"),
                 Ingredient(name="Мука"),
-                Ingredient(name="Сахар")
+                Ingredient(name="Сахар"),
             ]
 
             for ingredient in ingredients:
@@ -62,7 +64,7 @@ class TestCookbookAPI(unittest.TestCase):
                 cooking_time=20,
                 description="Классический итальянский рецепт",
                 views_count=5,
-                ingredients=ingredients[:4]  # Первые 4 ингредиента
+                ingredients=ingredients[:4],  # Первые 4 ингредиента
             )
 
             recipe2 = Recipe(
@@ -70,7 +72,7 @@ class TestCookbookAPI(unittest.TestCase):
                 cooking_time=45,
                 description="Вкусный домашний пирог",
                 views_count=3,
-                ingredients=ingredients[4:]  # Последние 2 ингредиента
+                ingredients=ingredients[4:],  # Последние 2 ингредиента
             )
 
             db.add_all([recipe1, recipe2])
@@ -184,7 +186,7 @@ class TestCookbookAPI(unittest.TestCase):
             "title": "Рецепт с несуществующими ингредиентами",
             "cooking_time": 30,
             "description": "Описание",
-            "ingredient_ids": [999, 1000]  # Несуществующие ID
+            "ingredient_ids": [999, 1000],  # Несуществующие ID
         }
 
         response = self.client.post("/recipes", json=recipe_data)
@@ -200,7 +202,7 @@ class TestCookbookAPI(unittest.TestCase):
             "title": "Тестовый рецепт",
             "cooking_time": 30,
             "description": "Тестовое описание рецепта",
-            "ingredient_ids": [1, 2, 3]  # Существующие ID ингредиентов
+            "ingredient_ids": [1, 2, 3],  # Существующие ID ингредиентов
         }
 
         response = self.client.post("/recipes", json=recipe_data)

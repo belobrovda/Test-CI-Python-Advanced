@@ -6,8 +6,7 @@ from fast_api.models import Base, Recipe, Ingredient
 SQLALCHEMY_DATABASE_URL = "sqlite:///./cookbook.db"
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, 
-    connect_args={"check_same_thread": False}
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -40,10 +39,27 @@ def populate_test_data():
 
         # Создаем ингредиенты
         ingredients_data = [
-            "Спагетти", "Бекон", "Яйца", "Сыр Пармезан", "Чеснок", "Сливки",
-            "Мука", "Сахар", "Яблоки", "Корица", "Сливочное масло", "Яйцо",
-            "Куриное филе", "Лук", "Морковь", "Рис", "Соевый соус", "Имбирь",
-            "Растительное масло", "Зеленый лук", "Кунжут"
+            "Спагетти",
+            "Бекон",
+            "Яйца",
+            "Сыр Пармезан",
+            "Чеснок",
+            "Сливки",
+            "Мука",
+            "Сахар",
+            "Яблоки",
+            "Корица",
+            "Сливочное масло",
+            "Яйцо",
+            "Куриное филе",
+            "Лук",
+            "Морковь",
+            "Рис",
+            "Соевый соус",
+            "Имбирь",
+            "Растительное масло",
+            "Зеленый лук",
+            "Кунжут",
         ]
 
         ingredients = []
@@ -60,7 +76,7 @@ def populate_test_data():
             ingredients[1],  # Бекон
             ingredients[2],  # Яйца
             ingredients[3],  # Сыр Пармезан
-            ingredients[4]  # Чеснок
+            ingredients[4],  # Чеснок
         ]
 
         carbonara = Recipe(
@@ -74,7 +90,7 @@ def populate_test_data():
             3. Взбейте яйца с тертым пармезаном
             4. Смешайте горячие спагетти с яичной смесью и беконом
             5. Подавайте сразу же, украсив дополнительным сыром""",
-            ingredients=carbonara_ingredients
+            ingredients=carbonara_ingredients,
         )
 
         # Рецепт 2: Яблочный пирог
@@ -84,7 +100,7 @@ def populate_test_data():
             ingredients[8],  # Яблоки
             ingredients[9],  # Корица
             ingredients[10],  # Сливочное масло
-            ingredients[11]  # Яйцо
+            ingredients[11],  # Яйцо
         ]
 
         apple_pie = Recipe(
@@ -98,7 +114,7 @@ def populate_test_data():
             3. Смешайте яблоки с корицей и сахаром
             4. Выложите начинку на тесто
             5. Выпекайте при 180°C 35-40 минут до золотистой корочки""",
-            ingredients=apple_pie_ingredients
+            ingredients=apple_pie_ingredients,
         )
 
         # Рецепт 3: Курица с рисом по-азиатски
@@ -111,7 +127,7 @@ def populate_test_data():
             ingredients[17],  # Имбирь
             ingredients[18],  # Растительное масло
             ingredients[19],  # Зеленый лук
-            ingredients[20]  # Кунжут
+            ingredients[20],  # Кунжут
         ]
 
         chicken_rice = Recipe(
@@ -125,7 +141,7 @@ def populate_test_data():
             3. Влейте соевый соус и добавьте отварной рис
             4. Тщательно перемешайте и прогрейте
             5. Подавайте, украсив зеленым луком и кунжутом""",
-            ingredients=chicken_rice_ingredients
+            ingredients=chicken_rice_ingredients,
         )
 
         # Добавляем рецепты в базу
