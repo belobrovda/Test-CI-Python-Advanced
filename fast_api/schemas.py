@@ -1,6 +1,6 @@
+from typing import List
+
 from pydantic import BaseModel, Field
-from typing import List, Optional
-from datetime import datetime
 
 
 class IngredientBase(BaseModel):
@@ -27,15 +27,23 @@ class IngredientResponse(IngredientBase):
 class RecipeBase(BaseModel):
     """Базовая схема рецепта"""
 
-    title: str = Field(..., max_length=200, description="Название блюда")
-    cooking_time: int = Field(..., gt=0, description="Время приготовления в минутах")
-    description: str = Field(..., description="Текстовое описание рецепта")
+    title: str = Field(
+        ..., max_length=200, description="Название блюда"
+    )
+    cooking_time: int = Field(
+        ..., gt=0, description="Время приготовления в минутах"
+    )
+    description: str = Field(
+        ..., description="Текстовое описание рецепта"
+    )
 
 
 class RecipeCreate(RecipeBase):
     """Схема для создания рецепта"""
 
-    ingredient_ids: List[int] = Field(..., description="Список ID ингредиентов")
+    ingredient_ids: List[int] = Field(
+        ..., description="Список ID ингредиентов"
+    )
 
 
 class RecipeResponse(RecipeBase):

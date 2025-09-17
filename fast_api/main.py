@@ -1,19 +1,15 @@
-from fastapi import FastAPI, Depends, HTTPException, status
-from sqlalchemy.orm import Session
-from sqlalchemy import desc, asc
-from typing import List
 from contextlib import asynccontextmanager
+from typing import List
 
+from fastapi import Depends, FastAPI, HTTPException, status
+from sqlalchemy import asc, desc
+from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
-from fast_api.database import get_db, create_tables
-from fast_api.models import Recipe, Ingredient
-from fast_api.schemas import (
-    RecipeCreate,
-    RecipeResponse,
-    RecipeListResponse,
-    IngredientResponse,
-)
+from fast_api.database import create_tables, get_db
+from fast_api.models import Ingredient, Recipe
+from fast_api.schemas import (IngredientResponse, RecipeCreate,
+                              RecipeListResponse, RecipeResponse)
 
 
 @asynccontextmanager
@@ -48,13 +44,15 @@ async def root():
     "/recipes",
     response_model=List[RecipeListResponse],
     summary="Получить список всех рецептов",
-    description="""Возвращает список всех рецептов, отсортированных по популярности.
+    description="""
+    Возвращает список всех рецептов, отсортированных по популярности.
 
     **Сортировка:**
     - По убыванию количества просмотров (популярности)
     - При равном количестве просмотров - по возрастанию времени приготовления
 
-    **Используется для:** Первого экрана приложения - таблицы со списком рецептов.
+    **Используется для:**
+    Первого экрана приложения - таблицы со списком рецептов.
     """,
 )
 async def get_recipes(db: Session = Depends(get_db)):
@@ -85,14 +83,16 @@ async def get_recipes(db: Session = Depends(get_db)):
     - Текстовое описание
     - Количество просмотров
 
-    **Примечание:** При каждом успешном запросе увеличивает счетчик просмотров на 1.
+    **Примечание:**
+    При каждом успешном запросе увеличивает счетчик просмотров на 1.
 
-    **Используется для:** Второго экрана приложения - детальной информации о рецепте.
+    **Используется для:**
+    Второго экрана приложения - детальной информации о рецепте.
     """,
 )
 async def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
     """
-    Получает детальную информацию о рецепте по ID и увеличивает счетчик просмотров.
+    Получает информацию о рецепте по ID и увеличивает счетчик просмотров.
     """
     recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
 
@@ -128,14 +128,17 @@ async def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
     **Возвращает:** Созданный рецепт со всей информацией.
     """,
 )
-async def create_recipe(recipe_data: RecipeCreate, db: Session = Depends(get_db)):
+async def create_recipe(
+        recipe_data: RecipeCreate,
+        db: Session = Depends(get_db)):
     """
     Создает новый рецепт с указанными ингредиентами.
     """
     # Проверяем существование всех ингредиентов
     ingredients = []
     for ingredient_id in recipe_data.ingredient_ids:
-        ingredient = db.query(Ingredient).filter(Ingredient.id == ingredient_id).first()
+        ingredient = db.query(Ingredient).filter(
+            Ingredient.id == ingredient_id).first()
         if not ingredient:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
