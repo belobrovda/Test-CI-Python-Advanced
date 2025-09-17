@@ -1,15 +1,14 @@
 import unittest
-import sys
-import os
+
 from fastapi import status
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from fast_api.main import app
 from fast_api.database import get_db
-from fast_api.models import Base, Recipe, Ingredient
+from fast_api.main import app
+from fast_api.models import Base, Ingredient, Recipe
 
 
 class TestCookbookAPI(unittest.TestCase):

@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 from typing import List
-from sqlalchemy import ForeignKey, Integer, String, Text, Table, Column
+
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -8,12 +10,23 @@ class Base(DeclarativeBase):
     pass
 
 
-# Ассоциативная таблица для связи многие-ко-многим между рецептами и ингредиентами
+# Ассоциативная таблица для связи многие-ко-многим
+# между рецептами и ингредиентами
 recipe_ingredient = Table(
     "recipe_ingredient",
     Base.metadata,
-    Column("recipe_id", Integer, ForeignKey("recipes.id"), primary_key=True),
-    Column("ingredient_id", Integer, ForeignKey("ingredients.id"), primary_key=True),
+    Column(
+        "recipe_id",
+        Integer,
+        ForeignKey("recipes.id"),
+        primary_key=True
+    ),
+    Column(
+        "ingredient_id",
+        Integer,
+        ForeignKey("ingredients.id"),
+        primary_key=True
+    ),
 )
 
 
