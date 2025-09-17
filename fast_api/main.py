@@ -8,8 +8,12 @@ from starlette.responses import JSONResponse
 
 from fast_api.database import create_tables, get_db
 from fast_api.models import Ingredient, Recipe
-from fast_api.schemas import (IngredientResponse, RecipeCreate,
-                              RecipeListResponse, RecipeResponse)
+from fast_api.schemas import (
+    IngredientResponse,
+    RecipeCreate,
+    RecipeListResponse,
+    RecipeResponse,
+)
 
 
 @asynccontextmanager
