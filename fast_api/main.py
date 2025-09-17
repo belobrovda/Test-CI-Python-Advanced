@@ -8,13 +8,19 @@ from starlette.responses import JSONResponse
 
 from fast_api.database import get_db, create_tables
 from fast_api.models import Recipe, Ingredient
-from fast_api.schemas import RecipeCreate, RecipeResponse, RecipeListResponse, IngredientResponse
+from fast_api.schemas import (
+    RecipeCreate,
+    RecipeResponse,
+    RecipeListResponse,
+    IngredientResponse,
+)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_tables()
     yield
+
 
 app = FastAPI(
     title="CookBook API",
@@ -24,7 +30,7 @@ app = FastAPI(
         "name": "API Support",
         "email": "support@cookbook.com",
     },
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 
@@ -34,7 +40,7 @@ async def root():
     return {
         "message": "Добро пожаловать в CookBook API!",
         "version": "1.0.0",
-        "docs": "/docs"
+        "docs": "/docs",
     }
 
 
@@ -49,7 +55,7 @@ async def root():
     - При равном количестве просмотров - по возрастанию времени приготовления
 
     **Используется для:** Первого экрана приложения - таблицы со списком рецептов.
-    """
+    """,
 )
 async def get_recipes(db: Session = Depends(get_db)):
     """
@@ -57,10 +63,11 @@ async def get_recipes(db: Session = Depends(get_db)):
     1. По количеству просмотров (по убыванию)
     2. По времени приготовления (по возрастанию) при равных просмотрах
     """
-    recipes = db.query(Recipe).order_by(
-        desc(Recipe.views_count),
-        asc(Recipe.cooking_time)
-    ).all()
+    recipes = (
+        db.query(Recipe)
+        .order_by(desc(Recipe.views_count), asc(Recipe.cooking_time))
+        .all()
+    )
 
     return recipes
 
@@ -81,7 +88,7 @@ async def get_recipes(db: Session = Depends(get_db)):
     **Примечание:** При каждом успешном запросе увеличивает счетчик просмотров на 1.
 
     **Используется для:** Второго экрана приложения - детальной информации о рецепте.
-    """
+    """,
 )
 async def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
     """
@@ -92,7 +99,7 @@ async def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
     if not recipe:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Рецепт с ID {recipe_id} не найден"
+            detail=f"Рецепт с ID {recipe_id} не найден",
         )
 
     # Увеличиваем счетчик просмотров
@@ -119,7 +126,7 @@ async def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
     **Примечание:** Ингредиенты должны быть созданы заранее.
 
     **Возвращает:** Созданный рецепт со всей информацией.
-    """
+    """,
 )
 async def create_recipe(recipe_data: RecipeCreate, db: Session = Depends(get_db)):
     """
@@ -132,7 +139,7 @@ async def create_recipe(recipe_data: RecipeCreate, db: Session = Depends(get_db)
         if not ingredient:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Ингредиент с ID {ingredient_id} не найден"
+                detail=f"Ингредиент с ID {ingredient_id} не найден",
             )
         ingredients.append(ingredient)
 
@@ -141,7 +148,7 @@ async def create_recipe(recipe_data: RecipeCreate, db: Session = Depends(get_db)
         title=recipe_data.title,
         cooking_time=recipe_data.cooking_time,
         description=recipe_data.description,
-        ingredients=ingredients
+        ingredients=ingredients,
     )
 
     db.add(new_recipe)
@@ -155,7 +162,7 @@ async def create_recipe(recipe_data: RecipeCreate, db: Session = Depends(get_db)
     "/ingredients",
     response_model=List[IngredientResponse],
     summary="Получить список всех ингредиентов",
-    description="Возвращает список всех доступных ингредиентов в системе."
+    description="Возвращает список всех доступных ингредиентов в системе.",
 )
 async def get_ingredients(db: Session = Depends(get_db)):
     """Получает список всех ингредиентов"""
